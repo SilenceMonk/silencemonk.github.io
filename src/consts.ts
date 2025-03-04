@@ -19,7 +19,7 @@ export const SITE: Site = {
   EMAIL: 'jason@enscribe.dev',
   NUM_POSTS_ON_HOMEPAGE: 2,
   POSTS_PER_PAGE: 3,
-  SITEURL: 'https://astro-erudite.vercel.app',
+  SITEURL: 'https://silencemonk.github.io/',
 }
 
 export const NAV_LINKS: Link[] = [
