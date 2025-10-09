@@ -1,13 +1,20 @@
 ---
+import BlogCard from '@/components/BlogCard.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Container from '@/components/Container.astro'
 import Link from '@/components/Link.astro'
 import ProjectCard from '@/components/ProjectCard.astro'
+import { buttonVariants } from '@/components/ui/button'
 import { SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
 import { getCollection } from 'astro:content'
 
 const projects = await getCollection('projects')
+
+const blog = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+  .slice(0, SITE.NUM_POSTS_ON_HOMEPAGE)
 ---
 
 <Layout title="About" description={SITE.DESCRIPTION}>
@@ -17,40 +24,120 @@ const projects = await getCollection('projects')
     <section>
       <div class="min-w-full">
         <div class="prose prose-neutral mb-8 dark:prose-invert">
+          <h1 class="mb-4 text-3xl font-bold">Hi, I'm Yushan Xie</h1>
+
           <p class="mb-4">
-            astro-erudite is an opinionated, no-frills static blogging template
-            that prioritizes simplicity and performance, built with <Link
-              href="https://astro.build"
+            I'm a Master's student in Computer Science at <Link
+              href="https://www.vanderbilt.edu"
               class="text-foreground"
               external
-              underline>Astro</Link
-            >, <Link
-              href="https://tailwindcss.com"
-              class="text-foreground"
-              external
-              underline>Tailwind</Link
-            >, and <Link
-              href="https://ui.shadcn.com"
-              class="text-foreground"
-              external
-              underline>shadcn/ui</Link
-            >. It provides a clean foundation for your content while being
-            extremely easy to customize.
+              underline>Vanderbilt University</Link
+            > (graduated June 2025), specializing in 3D computer vision, neural rendering,
+            and deep learning. My research focuses on bridging the gap between 3D
+            reconstruction and real-world applications.
           </p>
-          <p>
-            To learn more about the philosophy behind this template, check out
-            the following blog post: <Link
-              href="/blog/the-state-of-static-blogs"
+
+          <p class="mb-4">
+            Currently, I'm working on <strong>SurfLight-GS</strong>, a novel
+            material-lighting decomposition framework that uses Spherical
+            Harmonics and Spherical Gaussians for physically-based rendering.
+            I'm passionate about developing efficient, learnable 3D
+            representations that enable machines to better understand and
+            interact with their environments.
+          </p>
+
+          <p class="mb-4">
+            Previously, I've contributed to research published at <Link
+              href="https://link.springer.com/chapter/10.1007/978-3-031-43898-1_52"
               class="text-foreground"
-              underline>The State of Static Blogs in 2024</Link
+              external
+              underline>MICCAI 2023</Link
+            > (first author) on semi-supervised medical image segmentation and
+            <Link
+              href="https://openaccess.thecvf.com/content/ICCV2023/html/Xu_Animal3D_A_Comprehensive_Dataset_of_3D_Animal_Pose_and_Shape_ICCV_2023_paper.html"
+              class="text-foreground"
+              external
+              underline>ICCV 2023</Link
+            > on 3D animal pose estimation. I also have industry experience as an
+            Android developer at <Link
+              href="https://www.shure.com"
+              class="text-foreground"
+              external
+              underline>Shure Incorporated</Link
+            >, working on their MOTIV™ audio apps.
+          </p>
+
+          <h2 class="mb-4 mt-8 text-2xl font-semibold">Research Interests</h2>
+          <ul class="mb-4">
+            <li>
+              3D Reconstruction & Neural Rendering (NeRF, Gaussian Splatting)
+            </li>
+            <li>Semi-Supervised & Self-Supervised Learning</li>
+            <li>Computer Vision at Scale</li>
+          </ul>
+
+          <h2 class="mb-4 mt-8 text-2xl font-semibold">Education</h2>
+          <div class="mb-4">
+            <p class="mb-2">
+              <strong>Vanderbilt University</strong> – Nashville, TN<br />
+              <em>Master of Science in Computer Science</em> (Aug 2023 – June 2025)
+            </p>
+            <p>
+              <strong>East China Normal University</strong> – Shanghai, China<br
+              />
+              <em>Bachelor of Engineering in Electronic Engineering</em> (Sep 2019
+              – June 2023)
+            </p>
+          </div>
+
+          <h2 class="mb-4 mt-8 text-2xl font-semibold">Connect</h2>
+          <p class="mb-4">
+            I'm always interested in discussing research collaborations! Feel
+            free to reach out via <Link
+              href="mailto:yushan.xie@vanderbilt.edu"
+              class="text-foreground"
+              underline>email</Link
+            >, check out my work on <Link
+              href="https://github.com/SilenceMonk"
+              class="text-foreground"
+              external
+              underline>GitHub</Link
+            >, or connect on <Link
+              href="https://www.linkedin.com/in/yushan-xie-a9983427a/"
+              class="text-foreground"
+              external
+              underline>LinkedIn</Link
             >.
           </p>
         </div>
 
-        <h2 class="mb-4 text-2xl font-semibold">Example Projects Listing</h2>
+        <!-- <h2 class="mb-4 text-2xl font-semibold">Featured Projects</h2>
         <div class="flex flex-col gap-4">
           {projects.map((project) => <ProjectCard project={project} />)}
-        </div>
+        </div> 改成显示最近的三个blog post -->
+      </div>
+    </section>
+    <section class="flex flex-col gap-y-4">
+      <h2 class="text-2xl font-bold">Latest posts</h2>
+      <ul class="not-prose flex flex-col gap-y-4">
+        {
+          blog.map((post) => (
+            <li>
+              <BlogCard entry={post} />
+            </li>
+          ))
+        }
+      </ul>
+      <div class="flex justify-center">
+        <Link
+          href="/blog"
+          class={buttonVariants({ variant: 'ghost' }) + ' group'}
+        >
+          See all posts <span
+            class="ml-1.5 transition-transform group-hover:translate-x-1"
+            >&rarr;</span
+          >
+        </Link>
       </div>
     </section>
   </Container>
